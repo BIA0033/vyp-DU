@@ -1,0 +1,113 @@
+#Úkol 1
+import math
+
+def sqrt_iter(a, n):
+    x = a / 2
+    for _ in range(n):
+        x = (a / x + x) / 2
+    return x
+
+
+def test_sqrt():
+    test_values = [9, 16, 2]
+    iterations = 5
+
+    for a in test_values:
+        result_iter = sqrt_iter(a, iterations)
+        result_math = math.sqrt(a)
+        print(f"Počet iterací: {iterations}, Číslo: {a}")
+        print(f"Iterační metoda: {result_iter}")
+        print(f"Funkce math.sqrt: {result_math}\n")
+
+test_sqrt()
+
+#Úkol 2
+import math
+
+def sqrt_iter(a, n):
+    x = a
+    for _ in range(n):
+        x = (a / x + x) / 2
+    return x
+
+def approximate_pi(n, iterations=100):
+    v = sqrt_iter(1**2 - (1/2)**2, iterations)
+    b = 1 / 2
+    a = 1 
+    
+    pi_approx = 6 * b * v / 2
+    
+    for _ in range(n):
+        b_new = sqrt_iter((b / 2)**2 + (1 - v)**2, iterations)
+        v_new = sqrt_iter(a**2 - (b_new / 2)**2, iterations)
+        
+        b, v = b_new, v_new
+        
+        pi_approx *= 2 
+    
+    return pi_approx
+
+def test_approximation():
+    target_error = 1e-6  
+    n = 1 
+    true_pi = math.pi
+
+    while True:
+        pi_approx = approximate_pi(n)
+        error = abs(pi_approx - true_pi)
+        print(f"Počet úhelníků: {6 * (2 ** n)}, Aproximace: {pi_approx}, Chyba: {error}")
+        
+        if error < target_error:
+            break
+        
+        n += 1
+
+test_approximation()
+
+#Úkol 3
+import math
+
+def sqrt_approximation(a, iterations):
+    x = a
+    for _ in range(iterations):
+        x = (a / x + x) / 2 
+    return x
+
+def calculate_sqrt_3(iterations=1000):
+    return sqrt_approximation(3, iterations)
+
+def calculate_pi(n, iterations=1000):
+    sqrt_3_value = calculate_sqrt_3(iterations)
+    
+    a_1 = (1 / 2) * (1 / (2**3))
+    
+    sum_series = 0
+    
+    a_i = a_1
+    for i in range(1, n + 1):
+        sum_series += (1 / (2 * i + 1)) * a_i
+        
+        a_i = a_i * ((2 * i - 3) / (2 * i)) * (1 / 2**2)
+    
+    pi_approx = 12 * (- sqrt_3_value / 8 + 1 / 2 - sum_series)
+    
+    return pi_approx
+
+def test_pi_approximation():
+    target_error = 1e-6
+    n = 1
+    true_pi = math.pi
+
+    while True:
+        pi_approx = calculate_pi(n)
+        error = abs(pi_approx - true_pi)
+        print(f"Počet členů: {n}, Aproximace: {pi_approx}, Chyba: {error}")
+        
+        if error < target_error:
+            break
+        
+        n += 1 
+
+test_pi_approximation()
+
+
